@@ -8,6 +8,7 @@ import plus from '../../assets/plus.png'
 import trash from '../../assets/trash.png'
 import { useNavigate } from 'react-router-dom';
 import Loader from 'react-loader-spinner'
+import NavBar from '../NavBar';
 
 export default function Habits() {
   const [habits, setHabits] = useState(null);
@@ -23,7 +24,6 @@ export default function Habits() {
   const navigate = useNavigate();
   const [habitsUser, setHabitsUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const eu = ['comer', 'dormir']
 
   useEffect(() => {
     if (info) {
@@ -70,7 +70,8 @@ export default function Habits() {
         {
           <CreatedHabits>
             <div className='habit-description'>
-              <p>{habit.name} Ler um livro</p>
+              {/* <p>{habit.name}</p> O map deu bug*/}
+              <p> Ler um livro</p>
               <div className='daysWeek'>
                 <DayLetter isSelected={false}> D </DayLetter>
                 <DayLetter isSelected={false}> S </DayLetter>
@@ -81,7 +82,7 @@ export default function Habits() {
                 <DayLetter isSelected={false}> S </DayLetter>
               </div>
             </div>
-            <img src={trash} alt="trash symbol" />
+            <img src={trash} alt="trash symbol" onClick={() => deleteHabit(habit.id)} />
           </CreatedHabits>
         }
       </>
@@ -105,6 +106,13 @@ export default function Habits() {
       alert("Você deve preencher os campos corretamente");
     }
 
+  }
+  function deleteHabit(id) {
+    const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}}`,
+      { headers: { 'Authorization': `Bearer ${info.token}` } }
+    )
+    promise.then(() => navigate('/historico'));
+    promise.catch((answer) => console.log(answer.response));
   }
 
 
@@ -149,7 +157,7 @@ export default function Habits() {
         {
           (habits !== null && habits.length !== 0) ?
 
-            // eu.map(habit => {
+            // habitsUser.map(habitsUser => { Não sei porque esse map não funcionou.Tentei de várias formas
             <UserHabits habit={habitsUser} />
             // })
 
@@ -157,8 +165,9 @@ export default function Habits() {
               Adicione um hábito para começar a trackear!</p>
         }
       </HabitCreation>
-
+      <NavBar />
     </HabitsContainer>
+
 
   )
 }
@@ -335,6 +344,8 @@ display: flex;
 justify-content: space-between;
 align-items: flex-start;
 padding: 12px;
+
+margin-top: 30px;
 
 p{
 
